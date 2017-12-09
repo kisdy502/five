@@ -9,4 +9,5 @@ import java.io.IOException;
 public interface ICommunication {
     Data receive() throws IOException;
     boolean send(Data d);
+    void stop() throws IOException;
 }

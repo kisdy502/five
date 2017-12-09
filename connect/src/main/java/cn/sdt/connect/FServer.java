@@ -14,6 +14,8 @@ import java.net.Socket;
  */
 
 public class FServer extends Communicatior implements Runnable {
+    ServerSocket serverSocket = null;
+    Socket client = null;
 
     public FServer(Object lock, Context context) {
         this(Common.F_PORT, lock, context);
@@ -26,8 +28,7 @@ public class FServer extends Communicatior implements Runnable {
     }
 
     private void startServer() {
-        ServerSocket serverSocket = null;
-        Socket client = null;
+
         try {
             serverSocket = new ServerSocket(mPort);
             while (true) {
@@ -35,7 +36,7 @@ public class FServer extends Communicatior implements Runnable {
                 client = serverSocket.accept();
                 if (client.isConnected()) {
                     //TODO 发送本地广播
-                    MessageManager.sendConnectMsg(mContext, client.getInetAddress().getHostAddress());
+                    MessageManager.sendClientConnectMsg(mContext, client.getInetAddress().getHostAddress());
                     input = client.getInputStream();
                     output = client.getOutputStream();
                     // 处理这次连接
@@ -92,4 +93,8 @@ public class FServer extends Communicatior implements Runnable {
     }
 
 
+    @Override
+    public void stop() throws IOException {
+        super.stop();
+    }
 }

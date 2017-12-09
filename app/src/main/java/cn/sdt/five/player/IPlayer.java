@@ -1,5 +1,7 @@
 package cn.sdt.five.player;
 
+import cn.sdt.connect.Data;
+
 /**
  * Created by Administrator on 2017/12/9.
  */
@@ -16,4 +18,7 @@ public interface IPlayer {
      * @param posColumn
      */
     void play(int posRow, int posColumn);
+
+
+    void play(Data data);
 }

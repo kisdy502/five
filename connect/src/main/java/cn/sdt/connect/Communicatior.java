@@ -29,6 +29,11 @@ public abstract class Communicatior implements ICommunication {
     protected DataInputStream mInput;
     protected DataOutputStream mOutput;
 
+    @Override
+    public void stop() throws IOException {
+        mReadThread.setRunning(false);
+        mWriteThread.setRunning(false);
+    }
 
     /**
      * 读线程
@@ -46,8 +51,8 @@ public abstract class Communicatior implements ICommunication {
             isRunning = running;
         }
 
-        public ReadThread(Communicatior server) {
-            this.communicatior = server;
+        public ReadThread(Communicatior communicatior) {
+            this.communicatior = communicatior;
         }
 
         @Override

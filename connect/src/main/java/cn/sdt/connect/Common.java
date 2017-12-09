@@ -8,7 +8,7 @@ public class Common {
 
     public final static String LOCAL_MSG_ACTION = "cn.sdt.connect.LOCAL_MSG";
     public final static String CONNECT_MSG = "connect";
-
+    public final static String PLAY_MSG = "1";
     public final static int F_PORT = 9339;  //通信端口
 
 }

@@ -1,6 +1,5 @@
 package cn.sdt.five.player;
 
-import cn.sdt.connect.Data;
 import cn.sdt.five.widget.QiPanView;
 
 /**
@@ -8,11 +7,12 @@ import cn.sdt.five.widget.QiPanView;
  * Created by Administrator on 2017/12/9.
  */
 
-public class BlackPlayer extends Player {
+public class WhitePlayer extends Player {
 
-    public BlackPlayer(QiPanView qipanView) {
+
+    public WhitePlayer(QiPanView qipanView) {
         super(qipanView);
-        this.playTag = BLACK_TAG;
+        this.playTag = WHITE_TAG;
     }
 
 }

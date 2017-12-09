@@ -1,6 +1,7 @@
 package cn.sdt.connect;
 
 import android.content.Context;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.DataInputStream;
@@ -16,7 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Created by Administrator on 2017/12/7.
  */
 
-public class FClient extends Communicatior {
+public class FClient extends Communicatior implements Runnable {
 
     Socket mClientSocket;
     String mIp;
@@ -29,20 +30,20 @@ public class FClient extends Communicatior {
         return mPort;
     }
 
-    public FClient(String ip, int port, Context context) {
+    public FClient(String ip, int port, Context context, Object lock) {
         this.mIp = ip;
         this.mPort = port;
         this.mContext = context;
+        this.mLock = lock;
     }
 
-    public void connect() {
+    private void connect() {
         try {
             mClientSocket = new Socket();
             mClientSocket.setReuseAddress(true);
             mClientSocket.connect(new InetSocketAddress(mIp, mPort));
-
             //TODO  发送连接到服务器的本地广播消息
-
+            MessageManager.sendConnecServertMsg(mContext, mIp);
             mInput = new DataInputStream(mClientSocket.getInputStream());
             //向服务器端发送数据
             mOutput = new DataOutputStream(mClientSocket.getOutputStream());
@@ -55,7 +56,6 @@ public class FClient extends Communicatior {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -98,4 +98,16 @@ public class FClient extends Communicatior {
 
     }
 
+    @Override
+    public void stop() throws IOException {
+        super.stop();
+        if (mClientSocket != null && mClientSocket.isConnected()) {
+            mClientSocket.close();
+        }
+    }
+
+    @Override
+    public void run() {
+        connect();
+    }
 }

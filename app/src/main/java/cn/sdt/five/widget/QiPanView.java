@@ -10,7 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import cn.sdt.five.player.IPlayer;
+import cn.sdt.connect.Common;
+import cn.sdt.connect.Communicatior;
+import cn.sdt.connect.Data;
 import cn.sdt.five.player.Player;
 
 /**
@@ -20,7 +22,7 @@ import cn.sdt.five.player.Player;
 
 public class QiPanView extends View {
 
-    private Player player;
+    final static String TAG = "QiPanView";
 
     public final static int ROW = 10;
     public final static int COLUMN = 10;
@@ -29,23 +31,18 @@ public class QiPanView extends View {
     public final static int BLACK_QIZI = 1;
     public final static int WHITE_QIZI = 2;
 
-    final static String TAG = "QiPanView";
-
     private int size;                    //棋盘尺寸
-    private int qiziNum;                 //可以放棋子点的个数
-
     private float linePadding;               //最外面的线距离控件的距离
     private int qiziRadus;
     private int rowCount, columnCount;         //行数和列数
     private float rowDistance, columnDistance;
+    private int qipan[][];
 
-    Paint lPaint;
+    Paint lPaint;  //画线
+    Paint blackPaint, whitePaint;  //画棋盘
 
-    Paint blackPaint, whitePaint;
-
-    boolean isGameOver = false;
-
-    int qipan[][];
+    private Player player;
+    private Communicatior communicatior;
 
     public void setQizi(int row, int column, int value) {
         if (qipan[row][column] == NO_QIZI) {
@@ -88,6 +85,22 @@ public class QiPanView extends View {
         whitePaint.setColor(Color.WHITE);
         whitePaint.setStyle(Paint.Style.FILL);
 
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Communicatior getCommunicatior() {
+        return communicatior;
+    }
+
+    public void setCommunicatior(Communicatior communicatior) {
+        this.communicatior = communicatior;
     }
 
     @Override
@@ -139,25 +152,29 @@ public class QiPanView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                float ex = 0, ey = 0;
-                ex = event.getX();
-                ey = event.getY();
-                return handlePlay(ex, ey);
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
+        if (player != null) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    float ex = 0, ey = 0;
+                    ex = event.getX();
+                    ey = event.getY();
+                    return handlePlay(ex, ey);
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
+            return super.onTouchEvent(event);
+        } else {
+            Toast.makeText(getContext(), "没有对手怎么下棋...", Toast.LENGTH_SHORT).show();
+            return true;
         }
-        return super.onTouchEvent(event);
     }
 
     //绘制棋盘
     private void drawLine(Canvas canvas) {
         int row, line;
         float startX, startY, endX, endY;
-
         //水平线
         for (row = 0; row < rowCount; row++) {
             startX = linePadding;
@@ -215,9 +232,14 @@ public class QiPanView extends View {
         Log.d(TAG, "着子点位置:" + pos[0] + "行," + pos[1] + "列");
         if (NO_QIZI == qipan[pos[0]][pos[1]]) {
             qipan[pos[0]][pos[1]] = player.getPlayTag();
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(Common.PLAY_MSG).append("(").
+                    append(pos[0]).append(",").append(pos[1]).append(")");
+            communicatior.send(new Data(stringBuilder.toString()));
             invalidate();
             return true;
         } else {
+            Toast.makeText(getContext(), "位置已经有棋子了", Toast.LENGTH_SHORT).show();
             return false;
         }
     }

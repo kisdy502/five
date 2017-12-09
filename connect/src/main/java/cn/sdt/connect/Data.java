@@ -49,14 +49,14 @@ public class Data implements Serializable {
         return type + content;
     }
 
-    public int getX() {
+    public int getRow() {
         if (type == 1)
             return Integer.parseInt(content.substring
                     (content.indexOf('(') + 1, content.indexOf(',')));
         return -1;
     }
 
-    public int getY() {
+    public int getCol() {
         if (type == 1)
             return Integer.parseInt(content.substring
                     (content.indexOf(',') + 1, content.indexOf(')')));
@@ -81,6 +81,6 @@ public class Data implements Serializable {
         }
         Data d = new Data("1(3,4)");
         System.out.println("type=" + d.getType() + ",content=" + d.getContent());
-        System.out.println("x=" + d.getX() + ",y=" + d.getY());
+        System.out.println("x=" + d.getRow() + ",y=" + d.getCol());
     }
 }

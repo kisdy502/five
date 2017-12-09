@@ -20,6 +20,10 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("Is_Server", true);
             startActivity(intent);
+        } else if (R.id.join_game == id) {
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("Is_Server", false);
+            startActivity(intent);
         }
     }
 
