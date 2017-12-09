@@ -34,8 +34,8 @@ public class GameActivity extends BaseActivity {
     }
 
     private void initClient() {
-        FClient fClient=new FClient();
-        fClient.connect("192.168.1.100", Common.F_PORT);
+        FClient fClient=new FClient("192.168.1.100", Common.F_PORT,getApplicationContext());
+        fClient.connect();
     }
 
     @Override
